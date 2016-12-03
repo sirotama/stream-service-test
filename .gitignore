@@ -1,2 +1,4 @@
 records/*.*
 !.gitkeep
+vendor/
+composer.lock

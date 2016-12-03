@@ -1,0 +1,7 @@
+{
+  "require": {
+    "robmorgan/phinx": "*",
+    "j4mie/paris": "*",
+    "rmccue/requests": ">=1.0"
+  }
+}
