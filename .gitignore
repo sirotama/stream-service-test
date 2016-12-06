@@ -1,4 +1,3 @@
 records/*.*
 !.gitkeep
-vendor/
-composer.lock
+node_modules/
