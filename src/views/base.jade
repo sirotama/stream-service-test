@@ -2,7 +2,12 @@ doctype html
 html
     head
         meta(charset="UTF-8")
+        link(rel="stylesheet",href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css")
+        script(src="//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js")
         block head
     body
-        h1 unchikong
-        block content
+        nav.navbar.navbar-light.bg-faded
+            .container
+                a.navbar-brand(href="/") misskey-tv
+        .container
+            block content

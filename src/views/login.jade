@@ -1,6 +1,7 @@
 extends ./base
 block content
-    h1 login
+    h1 ログイン
     form(method="POST",action="/login")
-        input(type="text",name="screenName")
-        input(type="submit",value="heyhey")
+        .form-group
+            input(type="text",name="screenName",placeholder="srtm").form-control
+        input(type="submit",value="確認用トークを送る").btn.btn-primary

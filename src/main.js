@@ -14,9 +14,9 @@ app.use(session({
     }),
     cookie: {
         httpOnly: false,
-        maxAge: new Date(Date.now() + 60 * 60 * 1000)
+        maxAge: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) //一週間
     }
-})); //追加
+}))
 app.set("view engine","jade")
 app.set("views",__dirname+"/views/")
 app.use(bodyParser.urlencoded({extended:false}))
@@ -69,5 +69,10 @@ app.get("/start",function(req,res){
 })
 app.get("/session",function(req,res){
     res.send(req.session)
+})
+
+app.post("/nginx_rtmp/on_connect",function(req,res){
+    console.log(req.body)
+    res.end()
 })
 app.listen(3000)

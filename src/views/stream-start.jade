@@ -1,4 +1,5 @@
 extends ./base
 block content
-    h1 stream-start
-    p= user.streamKey
+    h1 配信開始
+    p ↓使って、どうぞ
+    input(type="text",value="rtmp://fuck.local/live/"+user.streamKey).form-control
