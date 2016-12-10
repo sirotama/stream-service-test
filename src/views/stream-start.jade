@@ -2,4 +2,9 @@ extends ./base
 block content
     h1 配信開始
     p ↓使って、どうぞ
-    input(type="text",value="rtmp://fuck.local/live/"+user.streamKey).form-control
+    .form-group
+        label RTMP URL
+        input(type="text",value="rtmp://fuck.local/live/").form-control
+    .form-group
+        label RTMP Stream Key(ないしょのやつ)
+        input(type="text",value=user.streamKey).form-control
