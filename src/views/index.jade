@@ -2,20 +2,21 @@ extends ./base
 block head
     meta(charset="UTF-8")
     title ウンチーコング
-    link(href='http://vjs.zencdn.net/4.2.0/video-js.css', rel='stylesheet')
-    script(src='http://vjs.zencdn.net/4.2.0/video.js')
-    style.
-        .vjs-big-play-button {
-            left: 40% !important;
-            top: 40% !important;
-            width: 20%;
-            height: 20%;
-        }
-        .vjs-play-control:before {
-            top:20% !important;
-            content: '\f101';
-            font-size: 20px;
-        }
+    // videojs
+        link(href='http://vjs.zencdn.net/4.2.0/video-js.css', rel='stylesheet')
+        script(src='http://vjs.zencdn.net/4.2.0/video.js')
+        style.
+            .vjs-big-play-button {
+                left: 40% !important;
+                top: 40% !important;
+                width: 20%;
+                height: 20%;
+            }
+            .vjs-play-control:before {
+                top:20% !important;
+                content: '\f101';
+                font-size: 20px;
+            }
     // script.
         $(function(){
             var playBT = $(".vjs-big-play-button");
@@ -24,14 +25,24 @@ block head
                 top:( (playBT.parent().outerHeight()-playBT.outerHeight())/2 )+"px"
             });
         });
+    script(src="//cdn.jsdelivr.net/hls.js/latest/hls.min.js")
+    script.
+        $(function(){
+            var video = document.getElementById("player")
+            var hls = new Hls()
+            hls.loadSource(video.currentSrc)
+            hls.attachMedia(video)
+        })
 block content
     h1 #{name}って知ってる？
     p 知らないよwww
     div= name
-    video.video-js.vjs-default-skin.vjs-big-play-centered(id='rtmp live test', controls='', preload='auto', width='640', height='360', data-setup='{}')
-        source(src='rtmp://fuck.local/live/srtm', type='rtmp/mp4')
-        p.vjs-no-js
-            | To view this video please enable JavaScript, and consider
-            | upgrading to a web browser
-            | that
-            a(href='http://videojs.com/html5-video-support/', target='_blank') supports HTML5 video
+    // videojs
+        video.video-js.vjs-default-skin.vjs-big-play-centered(id='rtmp live test', controls='', preload='auto', width='640', height='360', data-setup='{}')
+            source(src='rtmp://fuck.local/live/srtm', type='rtmp/mp4')
+            p.vjs-no-js
+                | To view this video please enable JavaScript, and consider
+                | upgrading to a web browser
+                | that
+                a(href='http://videojs.com/html5-video-support/', target='_blank') supports HTML5 video
+    video(src="/hls/srtm/index.m3u8",controls)#player
