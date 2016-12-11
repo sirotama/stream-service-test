@@ -97,4 +97,8 @@ app.get("/hls/:name/:path",function(req,res){
         res.sendFile("/var/www/hls/"+streamKey+"/"+req.params.path)
     })
 })
+app.post("/post-log",function(req,res){
+    console.log(req.body)
+    res.send("hey yo")
+})
 app.listen(3000)
