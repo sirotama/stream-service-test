@@ -106,7 +106,7 @@ app.post("/nginx-callback/publish",function(req,res){
             return Promise.reject("notfound")
         }
         return Promise.resolve(user)
-    }).then(function(){
+    }).then(function(user){
         var live = new models.lives()
         live.screenName = user.screenName
         live.status = 'live'
