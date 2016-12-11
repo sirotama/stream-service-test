@@ -9,5 +9,10 @@ html
         nav.navbar.navbar-light.bg-faded
             .container
                 a.navbar-brand(href="/") misskey-tv
+                ul.nav.navbar-nav
+                    if login
+                        li.nav-item: a.nav-link(href="/start") start
+                    else
+                        li.nav-item: a.nav-link(href="/login") login
         .container
             block content

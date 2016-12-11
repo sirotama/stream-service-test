@@ -21,7 +21,10 @@ app.set("view engine","jade")
 app.set("views",__dirname+"/views/")
 app.use(bodyParser.urlencoded({extended:false}))
 app.use(session({secret:'chikubi kanjirun desita yone?'}))
-
+app.use(function (req,res,next){
+    res.locals.login = !!req.session.user
+    next();
+})
 app.get("/",function(req,res){
     models.lives.find({status:'live'}).then(function(lives){
         res.render("index",{lives})
