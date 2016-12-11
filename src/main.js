@@ -23,7 +23,6 @@ app.use(bodyParser.urlencoded({extended:false}))
 app.use(session({secret:'chikubi kanjirun desita yone?'}))
 
 app.get("/",function(req,res){
-    sendTalk('srtm','unchikong tte sitteru?')
     res.render("index",{name:'unchikong'})
 })
 app.get("/login",function(req,res){
@@ -71,8 +70,7 @@ app.get("/session",function(req,res){
     res.send(req.session)
 })
 
-app.post("/nginx_rtmp/on_connect",function(req,res){
-    console.log(req.body)
-    res.end()
+app.get("/hls/:name/:path",function(req,res){
+    res.sendFile("/var/www/hls/"+req.params.name+"/"+req.params.path)
 })
 app.listen(3000)
