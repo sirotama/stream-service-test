@@ -83,7 +83,7 @@ app.get("/hls/:name/:path",function(req,res){
         })
     }
     promise.then(function(streamKey){
-        res.sendFile("/var/www/hls/"+req.params.name+"/"+req.params.path)
+        res.sendFile("/var/www/hls/"+streamKey+"/"+req.params.path)
     })
 })
 app.listen(3000)
