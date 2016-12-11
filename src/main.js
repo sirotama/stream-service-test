@@ -49,6 +49,17 @@ app.get("/logincallback/:token",function(req,res){
         res.render("login-success.jade")
     })
 })
+app.get("/profile/:username",function(req,res){
+    models.users.findOne({screenName:req.params.username}).then(function(user){
+        if(!user) {
+            // not found
+            res.status(404).send("user not found")
+            return
+        }
+        res.render("user-profile.jade",{user})
+    })
+})
+
 app.get("/start",function(req,res){
     if(!req.session.user) {
         res.send("ろぐいんして")

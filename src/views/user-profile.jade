@@ -1,0 +1,17 @@
+extends ./base
+block head
+    meta(charset="UTF-8")
+    title ウンチーコング
+    script(src="//cdn.jsdelivr.net/hls.js/latest/hls.min.js")
+    script.
+        $(function(){
+            var video = document.getElementById("player")
+            var hls = new Hls()
+            hls.loadSource(video.currentSrc)
+            hls.attachMedia(video)
+        })
+block content
+    h1 #{name}って知ってる？
+    p 知らないよwww
+    div= name
+    video(src="/hls/#{user.screenName}/index.m3u8",controls)#player
