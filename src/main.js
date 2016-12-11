@@ -23,7 +23,9 @@ app.use(bodyParser.urlencoded({extended:false}))
 app.use(session({secret:'chikubi kanjirun desita yone?'}))
 
 app.get("/",function(req,res){
-    res.render("index",{name:'unchikong'})
+    models.lives.find({status:'live'}).then(function(lives){
+        res.render("index",{lives})
+    })
 })
 app.get("/login",function(req,res){
     res.render("login")
@@ -97,8 +99,22 @@ app.get("/hls/:name/:path",function(req,res){
         res.sendFile("/var/www/hls/"+streamKey+"/"+req.params.path)
     })
 })
-app.post("/post-log",function(req,res){
-    console.log(req.body)
-    res.send("hey yo")
+app.post("/nginx-callback/publish",function(req,res){
+    var streamKey = req.body.name
+    models.users.findOne({streamKey}).then(function(user){
+        if(!user){
+            return Promise.reject("notfound")
+        }
+        return Promise.resolve(user)
+    }).then(function(){
+        var live = new models.lives()
+        live.screenName = user.screenName
+        live.status = 'live'
+        return live.save()
+    }).then(function(){
+        res.send("ok")
+    },function(){
+        res.status(400).send("ng")
+    })
 })
 app.listen(3000)

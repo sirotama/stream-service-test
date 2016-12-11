@@ -37,12 +37,5 @@ block content
     h1 #{name}って知ってる？
     p 知らないよwww
     div= name
-    // videojs
-        video.video-js.vjs-default-skin.vjs-big-play-centered(id='rtmp live test', controls='', preload='auto', width='640', height='360', data-setup='{}')
-            source(src='rtmp://fuck.local/live/srtm', type='rtmp/mp4')
-            p.vjs-no-js
-                | To view this video please enable JavaScript, and consider
-                | upgrading to a web browser
-                | that
-                a(href='http://videojs.com/html5-video-support/', target='_blank') supports HTML5 video
-    video(src="/hls/srtm/index.m3u8",controls)#player
+    each live in lives
+        a(href='/profile/'+live.screenName) haisin

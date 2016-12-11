@@ -5,7 +5,7 @@ module.exports = function(mongoose) {
     }
     var schema = new mongoose.Schema({
         screenName:String,
-        streamKey:{type:String,default:generateToken}
+        streamKey:{type:String,default:generateToken},
     },{
         timestamps:true
     })
