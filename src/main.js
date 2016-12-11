@@ -69,8 +69,21 @@ app.get("/start",function(req,res){
 app.get("/session",function(req,res){
     res.send(req.session)
 })
-
+var username_streamkey_cache = {}
 app.get("/hls/:name/:path",function(req,res){
-    res.sendFile("/var/www/hls/"+req.params.name+"/"+req.params.path)
+    var promise
+    if(username_streamkey_cache[req.params.name]){
+        promise = Promise.resolve(username_streamkey_cache[req.params.name])
+    } else {
+        promise = models.users.findOne({
+            screenName:req.params.name
+        }).then(function(user){
+            username_streamkey_cache[req.params.name]=user.streamKey
+            return Promise.resolve(user.streamKey)
+        })
+    }
+    promise.then(function(streamKey){
+        res.sendFile("/var/www/hls/"+req.params.name+"/"+req.params.path)
+    })
 })
 app.listen(3000)
