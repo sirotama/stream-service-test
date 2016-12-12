@@ -2,6 +2,14 @@ extends ./base
 block head
     meta(charset="UTF-8")
     title @#{user.screenName} Profile - MisskeyTV
+    style.
+        .alert{
+            position:relative;
+        }
+        .alert .btn{
+            position:absolute;
+            right:0;
+        }
 block content
     h1 @#{user.screenName}
     .alert.alert-info
