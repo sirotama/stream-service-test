@@ -61,7 +61,9 @@ app.get("/profile/:username",function(req,res){
             res.status(404).send("user not found")
             return
         }
-        res.render("user-profile.jade",{user})
+        return models.lives.find({screenName:user.screenName}).then(function(lives){
+            res.render("user-profile.jade",{user,lives})
+        })
     })
 })
 
