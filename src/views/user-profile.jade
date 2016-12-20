@@ -23,7 +23,7 @@ block head
                     console.log(diff)
                     $elem.text(
                         ~~(diff / 60) + ":" +
-                        ('0'+(diff % 60)).slice(-2)
+                        ('0'+(~~diff % 60)).slice(-2)
                     )
                 }
             });
