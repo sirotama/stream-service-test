@@ -70,7 +70,7 @@ app.get("/profile/:username",function(req,res){
         return Promise.all([
             user,
             models.lives.find({screenName:user.screenName}).sort("-createdAt"), // lives
-            models.lives.findOne({screenName:user.screenName}).sort("-createdAt") // now_live
+            models.lives.findOne({screenName:user.screenName,status:"live"}).sort("-createdAt") // now_live
         ])
     }).then(function(_){
         res.render("user-profile.jade",{
