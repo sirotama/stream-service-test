@@ -16,8 +16,11 @@ block content
     .alert.alert-info
         | Now live
         a(href="/live/"+user.screenName).btn.btn-primary Watch!
-    h2 過去の配信
+    h2 配信
     table.table.table-bordered
+        tr
+            th status
+            th name
         each live in lives
             tr
                 td: a(href='/live/'+user.screenName)= live.name
