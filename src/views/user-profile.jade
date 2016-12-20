@@ -45,6 +45,6 @@ block content
         each live in lives
             tr
                 td= live.status
-                td: time(difftime=live.endAt - live.createdAt)
                 td: time(datetime=live.createdAt.toISOString())
+                td: time(difftime=live.endAt - live.createdAt)
                 td: a(href='/live/'+user.screenName)= live.name
