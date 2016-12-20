@@ -20,6 +20,7 @@ block head
                     $elem.text(moment(date).format("YYYY/MM/DD HH:mm"))
                 } else if($elem.attr("difftime")) {
                     var diff = parseInt($elem.attr("difftime"))/1000/60
+                    console.log(diff)
                     $elem.text(
                         ~~(diff / 60) + ":" +
                         ('0'+(diff % 60)).slice(-2)
