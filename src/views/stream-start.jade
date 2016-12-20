@@ -12,7 +12,7 @@ block content
             input(type="text",name="name",value=user.newStream.name).form-control
         .form-group
             label 説明
-            textarea(name="description",value=user.newStream.description).form-control
+            textarea(name="description").form-control= user.newStream.description
         button(type="submit").btn.btn-primary 配信情報を更新
     p ↓使って、どうぞ
     .form-group
