@@ -5,6 +5,7 @@ module.exports = function(mongoose) {
         description:String,
         recordPath:String,
         status:String,
+        liveEndAt:Date,
     },{
         timestamps:true
     })

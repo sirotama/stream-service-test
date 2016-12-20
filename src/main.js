@@ -203,6 +203,7 @@ app.post("/nginx-callback/record",function(req,res){
         }
         return models.lives.findOne({screenName:user.screenName,status:"live"})
     }).then(function(live){
+        live.endAt= new Date()
         live.status="archive"
         return live.save()
     }).then(function(live){
