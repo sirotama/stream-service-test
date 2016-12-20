@@ -11,6 +11,14 @@ block head
             position:absolute;
             right:1.25rem;
         }
+    script.
+        $(function(){
+            $("time").each(function(i, elem) {
+                var $elem=$(elem)
+                $elem.text($elem.attr("datetime"))
+            });
+        })
+
 block content
     h1 @#{user.screenName}
     if now_live
@@ -20,9 +28,11 @@ block content
     h2 配信
     table.table.table-bordered
         tr
-            th status
-            th name
+            th 状態
+            th 開始時間
+            th タイトル
         each live in lives
             tr
                 td= live.status
+                td: time(datetime=live.createdAt)
                 td: a(href='/live/'+user.screenName)= live.name
