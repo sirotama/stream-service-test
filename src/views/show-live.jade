@@ -13,4 +13,7 @@ block head
 block content
     h1 #{user.screenName} Live
     div.embed-responsive.embed-responsive-16by9
-        video.embed-responsive-item(src="/hls/#{user.screenName}/index.m3u8",controls)#player
+        if live.status == "live"
+            video.embed-responsive-item(src="/hls/#{user.screenName}/index.m3u8",controls)#player
+        else
+            video.embed-responsive-item(src="/records/mp4/"+live.id,controls)

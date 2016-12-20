@@ -5,6 +5,8 @@ const sendTalk = require("./utils/sendTalk")
 const models = require("./models")
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session);
+const fs  = require("fs")
+const exec = require("child_process").exec
 
 var app = express()
 app.use(session({
@@ -17,6 +19,10 @@ app.use(session({
         maxAge: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) //一週間
     }
 }))
+app.use(function(req,res,next){
+    console.log(req.method+" "+req.path);
+    next()
+})
 app.set("view engine","jade")
 app.set("views",__dirname+"/views/")
 app.use(bodyParser.urlencoded({extended:false}))
@@ -73,7 +79,15 @@ app.get("/live/:username",function(req,res){
             res.status(404).send("user not found")
             return
         }
-        res.render("show-live.jade",{user})
+        return Promise.all([
+            user,
+            models.lives.findOne({screenName:user.screenName}).sort("-createdAt")
+        ])
+    }).then(function(_){
+        var user = _[0]
+        var live = _[1]
+        console.log(arguments)
+        res.render("show-live.jade",{user,live})
     })
 })
 
@@ -98,6 +112,7 @@ app.get("/session",function(req,res){
     res.send(req.session)
 })
 var username_streamkey_cache = {}
+// HLS配信
 app.get("/hls/:name/:path",function(req,res){
     var promise
     if(username_streamkey_cache[req.params.name]){
@@ -115,6 +130,15 @@ app.get("/hls/:name/:path",function(req,res){
 	console.log("/var/www/hls/"+streamKey+"/"+req.params.path)
     })
 })
+// 録画配信
+app.get("/records/mp4/:id",function(req,res){
+    models.lives.findById(req.params.id).then(function(live){
+        if(!live) return res.status(404).send("not-found")
+        if(!live.recordPath) return res.status(404).send("not-found")
+        res.sendFile(live.recordPath)
+    })
+})
+// 放送開始
 app.post("/nginx-callback/publish",function(req,res){
     var streamKey = req.body.name
     models.users.findOne({streamKey}).then(function(user){
@@ -131,6 +155,42 @@ app.post("/nginx-callback/publish",function(req,res){
         res.send("ok")
     },function(){
         res.status(400).send("ng")
+    })
+})
+// 放送終了
+app.post("/nginx-callback/record",function(req,res){
+    var recordFilePath = req.body.path
+    console.log(recordFilePath)
+    var streamKey = /^.+\/(.+?)\.flv$/.exec(recordFilePath)[1]
+    if(0 !== recordFilePath.indexOf("/var/www/html/records")) return res.status(403).send("invalid")
+    if(~recordFilePath.indexOf("'")) return res.status(403).send("invalid")
+    if(~recordFilePath.indexOf('"')) return res.status(403).send("invalid")
+    if(~recordFilePath.indexOf("..")) return res.status(403).send("invalid")
+    models.users.findOne({streamKey}).then(function(user){
+        if(!user) {
+            return Promise.reject("user-not-found")
+        }
+        return models.lives.findOne({screenName:user.screenName,status:"live"})
+    }).then(function(live){
+        live.status="archive"
+        return live.save()
+    }).then(function(live){
+        return new Promise(function(resolve,reject){
+            exec("ffmpeg -i "+recordFilePath+" -vcodec copy -acodec copy ../records/"+live.id+".mp4",function(err){
+                if(err) reject(err)
+                fs.unlink(recordFilePath,function(err){
+                    if(err) reject(err)
+                    resolve()
+                })
+            })
+        }).then(function(){
+            live.recordPath="/var/www/html/records/"+live.id+".mp4"
+            return live.save()
+        })
+    }).then(function(){
+        res.send("ok");
+    },function(err){
+        res.status(400).send(err)
     })
 })
 app.listen(3000)
