@@ -145,6 +145,16 @@ app.post("/nginx-callback/publish",function(req,res){
         if(!user){
             return Promise.reject("notfound")
         }
+        // 開始されたのにもう始まってる放送があったら終わったことに
+        models.lives.find({
+            screenName:user.screenName,
+            status:"live"
+        }).then(function(lives){
+            lives.forEach(function(live){
+                live.status = "archive"
+                live.save(function(err){})
+            })
+        })
         return Promise.resolve(user)
     }).then(function(user){
         var live = new models.lives()
