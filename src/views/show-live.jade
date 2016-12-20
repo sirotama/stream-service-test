@@ -9,6 +9,9 @@ block head
             var hls = new Hls()
             hls.loadSource(video.currentSrc)
             hls.attachMedia(video)
+            hls.on(Hls.Events.MANIFEST_PARSED,function() {
+                video.play()
+            })
         })
     style.
         video{

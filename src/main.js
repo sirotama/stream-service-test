@@ -104,7 +104,6 @@ app.get("/start",function(req,res){
         }
         return Promise.resolve(user)
     }).then(function(user){
-
         res.render("stream-start.jade",{user})
     })
 })
@@ -127,7 +126,6 @@ app.get("/hls/:name/:path",function(req,res){
     }
     promise.then(function(streamKey){
         res.sendFile("/var/www/hls/"+streamKey+"/"+req.params.path,function(err){if(err)res.status(404).send("not-found")})
-	console.log("/var/www/hls/"+streamKey+"/"+req.params.path)
     })
 })
 // 録画配信
