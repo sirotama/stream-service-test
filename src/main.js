@@ -107,6 +107,27 @@ app.get("/start",function(req,res){
         res.render("stream-start.jade",{user})
     })
 })
+app.post("/start",function(req,res){
+    if(!req.session.user) {
+        res.send("ろぐいんして")
+        return;
+    }
+    models.users.findOne({screenName:req.session.user}).then(function(user){
+        if(!user){
+            user = new models.users()
+            user.screenName = req.session.user
+            return user.save()
+        }
+        return Promise.resolve(user)
+    }).then(function(user){
+        user.newStream.name = req.body.name
+        user.newStream.description = req.body.description
+        return user.save()
+    }).then(function(user){
+        res.render("stream-start.jade",{user})
+    })
+})
+
 app.get("/session",function(req,res){
     res.send(req.session)
 })
