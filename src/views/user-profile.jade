@@ -16,6 +16,7 @@ block content
     .alert.alert-info
         | Now live
         a(href="/live/"+user.screenName).btn.btn-primary Watch!
-    ul
+    table.table.table-bordered
         each live in lives
-            li: a(href='/live/'+user.screenName) live
+            tr
+                td: a(href='/live/'+user.screenName)= live.name
