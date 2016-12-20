@@ -13,9 +13,10 @@ block head
         }
 block content
     h1 @#{user.screenName}
-    .alert.alert-info
-        | Now live
-        a(href="/live/"+user.screenName).btn.btn-primary Watch!
+    if now_live
+        .alert.alert-info
+            | Now live
+            a(href="/live/"+user.screenName).btn.btn-primary.btn-sm Watch!
     h2 配信
     table.table.table-bordered
         tr

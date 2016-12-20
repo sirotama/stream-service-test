@@ -67,8 +67,16 @@ app.get("/profile/:username",function(req,res){
             res.status(404).send("user not found")
             return
         }
-        return models.lives.find({screenName:user.screenName}).sort("-createdAt").then(function(lives){
-            res.render("user-profile.jade",{user,lives})
+        return Promise.all([
+            user,
+            models.lives.find({screenName:user.screenName}).sort("-createdAt"), // lives
+            models.lives.findOne({screenName:user.screenName}).sort("-createdAt") // now_live
+        ])
+    }).then(function(_){
+        res.render("user-profile.jade",{
+            user:_[0],
+            lives:_[1],
+            now_live:_[2]
         })
     })
 })
