@@ -66,6 +66,16 @@ app.get("/profile/:username",function(req,res){
         })
     })
 })
+app.get("/live/:username",function(req,res){
+    models.users.findOne({screenName:req.params.username}).then(function(user){
+        if(!user) {
+            // not found
+            res.status(404).send("user not found")
+            return
+        }
+        res.render("show-live.jade",{user})
+    })
+})
 
 app.get("/start",function(req,res){
     if(!req.session.user) {
@@ -101,7 +111,8 @@ app.get("/hls/:name/:path",function(req,res){
         })
     }
     promise.then(function(streamKey){
-        res.sendFile("/var/www/hls/"+streamKey+"/"+req.params.path)
+        res.sendFile("/var/www/hls/"+streamKey+"/"+req.params.path,function(err){if(err)res.status(404).send("not-found")})
+	console.log("/var/www/hls/"+streamKey+"/"+req.params.path)
     })
 })
 app.post("/nginx-callback/publish",function(req,res){
