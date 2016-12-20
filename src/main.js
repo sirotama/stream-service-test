@@ -43,7 +43,7 @@ app.post("/login",function(req,res){
     var token = new models.auth_request_tokens();
     token.screenName = req.body.screenName
     token.save().then(function(){
-        return sendTalk(req.body.screenName,"login url:http://localhost:3000/logincallback/"+token.token)
+        return sendTalk(req.body.screenName,"login url:http://misskey.tk/logincallback/"+token.token)
     }).then(function(){
         res.render("login-send.jade")
     })
