@@ -1,10 +1,15 @@
 extends ./base
+block head
+    script.
+        $(function(){
+            $("#rtmpurl").val("rtmp://"+location.hostname+"/live/")
+        })
 block content
     h1 配信開始
     p ↓使って、どうぞ
     .form-group
         label RTMP URL
-        input(type="text",value="rtmp://fuck.local/live/").form-control
+        input(type="text",value="rtmp://fuck.local/live/").form-control#rtmpurl
     .form-group
         label RTMP Stream Key(ないしょのやつ)
         input(type="text",value=user.streamKey).form-control
