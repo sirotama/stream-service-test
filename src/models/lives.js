@@ -1,8 +1,10 @@
 module.exports = function(mongoose) {
     var schema = new mongoose.Schema({
         screenName:String,
+        name:String,
+        description:String,
         recordPath:String,
-        status:String
+        status:String,
     },{
         timestamps:true
     })

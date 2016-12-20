@@ -18,7 +18,8 @@ block head
             background:black;
         }
 block content
-    h1 #{user.screenName} Live
+    h1= live.name
+    span #{user.screenName} Live
     div.embed-responsive.embed-responsive-16by9
         if live.status == "live"
             video.embed-responsive-item(src="/hls/#{user.screenName}/index.m3u8",controls)#player

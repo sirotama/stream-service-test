@@ -178,6 +178,8 @@ app.post("/nginx-callback/publish",function(req,res){
     }).then(function(user){
         var live = new models.lives()
         live.screenName = user.screenName
+        live.name = user.newStream.name
+        live.description = user.newStream.description
         live.status = 'live'
         return live.save()
     }).then(function(){
