@@ -19,10 +19,10 @@ block head
                     var date=new Date($elem.attr("datetime"))
                     $elem.text(moment(date).format("YYYY/MM/DD HH:mm"))
                 } else if($elem.attr("difftime")) {
-                    var diff = parseInt($elem.attr("difftime"))/1000
+                    var diff = parseInt($elem.attr("difftime"))/1000/60
                     $elem.text(
-                        ~~(diff / 60 / 60) + ":" +
-                        ('0'+(diff / 60 % 60)).slice(-2)
+                        ~~(diff / 60) + ":" +
+                        ('0'+(diff % 60)).slice(-2)
                     )
                 }
             });
