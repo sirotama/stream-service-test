@@ -6,12 +6,14 @@ block head
         })
 block content
     h1 配信開始
-    .form-group
-        label 配信タイトル
-        input(type="text",name="name",value=user.newStream.name).form-control
-    .form-group
-        label 説明
-        textarea(name="description",value=user.newStream.description).form-control
+    form(method="POST")
+        .form-group
+            label 配信タイトル
+            input(type="text",name="name",value=user.newStream.name).form-control
+        .form-group
+            label 説明
+            textarea(name="description",value=user.newStream.description).form-control
+        button(type="submit").btn.btn-primary 配信情報を更新
     p ↓使って、どうぞ
     .form-group
         label RTMP URL
