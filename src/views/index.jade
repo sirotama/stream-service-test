@@ -2,6 +2,7 @@ extends ./base
 block head
     meta(charset="UTF-8")
     title MisskeyTV
+    meta(name="description",content="MisskeyTVはmisskey.xyzのアカウントで生放送ができるサービスです")
 block content
     h1 MisskeyTV
     h2 現在配信中
@@ -9,3 +10,7 @@ block content
     ul
         each live in lives
             li: a(href='/live/'+live.screenName) @#{live.screenName}
+    h2 過去の配信
+    ul
+        each live in end_lives
+            li: a(href='/record/'+live.id) #{live.name} - @#{live.screenName}

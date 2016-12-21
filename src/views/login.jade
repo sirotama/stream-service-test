@@ -1,7 +1,4 @@
 extends ./base
 block content
     h1 ログイン
-    form(method="POST",action="/login")
-        .form-group
-            input(type="text",name="screenName",placeholder="srtm").form-control
-        input(type="submit",value="確認用トークを送る").btn.btn-primary
+    a(href="/login/xyz_start").btn.btn-primary misskey.xyzで認証

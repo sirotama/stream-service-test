@@ -10,6 +10,7 @@ module.exports = function(mongoose) {
             name:String,
             description:String,
         },
+        xyzToken:String,
     },{
         timestamps:true
     })

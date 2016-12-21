@@ -3,6 +3,9 @@ block head
     script.
         $(function(){
             $("#rtmpurl").val("rtmp://"+location.hostname+"/live/")
+            $("#streamKeyShow").click(function(){
+                prompt("please copy",$("#streamKey").val())
+            })
         })
 block content
     h1 配信開始
@@ -20,7 +23,10 @@ block content
         input(type="text",value="rtmp://fuck.local/live/").form-control#rtmpurl
     .form-group
         label RTMP Stream Key(ないしょのやつ)
-        input(type="text",value=user.streamKey).form-control
+        .input-group
+            input(type="password",value=user.streamKey).form-control#streamKey
+            span.input-group-btn
+                button.btn.btn-secondary#streamKeyShow 表示
     h2 推奨設定
     ul
         li ビットレート:1500kbps前後（サーバーサイドで1250kbpsに再エンコされます）

@@ -7,7 +7,8 @@ const session = require('express-session')
 const MongoStore = require('connect-mongo')(session);
 const fs  = require("fs")
 const exec = require("child_process").exec
-
+const request = require("request-promise")
+const config = require("./config")
 var app = express()
 app.use(session({
     secret: 'secret',
@@ -32,33 +33,66 @@ app.use(function (req,res,next){
     next();
 })
 app.get("/",function(req,res){
-    models.lives.find({status:'live'}).then(function(lives){
-        res.render("index",{lives})
+    Promise.all([
+        models.lives.find({status:'live'}),
+        models.lives.find({status:'archive'}).sort("-endAt")
+    ]).then(function(_){
+        res.render("index",{
+            lives:_[0],
+            end_lives:_[1]
+        })
     })
 })
 app.get("/login",function(req,res){
     res.render("login")
 })
-app.post("/login",function(req,res){
-    var token = new models.auth_request_tokens();
-    token.screenName = req.body.screenName
-    token.save().then(function(){
-        return sendTalk(req.body.screenName,"login url:http://misskey.tk/logincallback/"+token.token)
-    }).then(function(){
-        res.render("login-send.jade")
+// misskey.xyz 認証開始
+app.get("/login/xyz_start",function(req,res){
+    request.post({
+        url:"https://api.misskey.xyz/auth/session/generate",
+        form:{
+            app_secret:config.api_secret
+        },
+        json:true
+    }).then(function(json){
+        res.redirect("https://auth.misskey.xyz/"+json.token)
     })
 })
-app.get("/logincallback/:token",function(req,res){
-    models.auth_request_tokens.findOne({token:req.params.token}).then(function(token){
-        if(!token) {
-            // not found
-            res.status(404).send("token invalid?")
-            return
-        }
-        req.session.user = token.screenName
+app.get("/login/xyz_callback",function(req,res){
+    request.post({
+        url:"https://api.misskey.xyz/auth/session/userkey",
+        form:{
+            app_secret:config.api_secret,
+            token:req.query.token
+        },
+        json:true
+    }).then(function(json){
+        req.session.userkey = json.userkey
+        return request.post({
+            url:"https://api.misskey.xyz/i",
+            form:{
+                _userkey:json.userkey
+            },
+            json:true
+        })
+    }).then(function(json){
+        console.log(json)
+        req.session.user = json.username
         req.session.save()
-        res.render("login-success.jade")
+        return models.users.findOne({screenName:json.screen_name})
+    }).then(function(user){
+        if(!user) {
+            user = new models.users()
+            user.screenName = req.session.user
+        }
+        user.xyzToken = req.session.userkey
+        return user.save()
+    }).then(function(user){
+        res.redirect("/login/xyz_end")
     })
+})
+app.get("/login/xyz_end",function(req,res){
+    res.render("login-success")
 })
 app.get("/profile/:username",function(req,res){
     models.users.findOne({screenName:req.params.username}).then(function(user){
