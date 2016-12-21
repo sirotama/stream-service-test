@@ -17,7 +17,8 @@ block content
             label 説明
             textarea(name="description").form-control= user.newStream.description
         button(type="submit").btn.btn-primary 配信情報を更新
-    p ↓使って、どうぞ
+    h2 RTMP
+    p これを配信ソフトに設定してください。
     .form-group
         label RTMP URL
         input(type="text",value="rtmp://fuck.local/live/").form-control#rtmpurl

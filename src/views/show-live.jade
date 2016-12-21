@@ -10,6 +10,7 @@ block head
             hls.loadSource(video.currentSrc)
             hls.attachMedia(video)
             hls.on(Hls.Events.MANIFEST_PARSED,function() {
+                video.volume=0.5;
                 video.play()
             })
         })
@@ -17,9 +18,17 @@ block head
         video{
             background:black;
         }
+        h1 .tag{
+            font-size:0.5em;
+        }
 block content
     h1= live.name
-    span #{user.screenName} Live
+        if live.status == "live"
+            span.tag.tag-success Live
+        else if live.status == "archive"
+            span.tag.tag-warning Archive
+    div 配信者:
+        a(href="/profile/"+user.screenName) @#{user.screenName}
     div.embed-responsive.embed-responsive-16by9
         if live.status == "live"
             video.embed-responsive-item(src="/hls/#{user.screenName}/index.m3u8",controls)#player

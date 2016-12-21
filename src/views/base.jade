@@ -10,11 +10,11 @@ html
     body
         nav.navbar.navbar-light.bg-faded
             .container
-                a.navbar-brand(href="/") misskey-tv
+                a.navbar-brand(href="/") Misskey TV
                 ul.nav.navbar-nav
                     if login
-                        li.nav-item: a.nav-link(href="/start") start
+                        li.nav-item: a.nav-link(href="/start") 配信開始
                     else
-                        li.nav-item: a.nav-link(href="/login") login
+                        li.nav-item: a.nav-link(href="/login") ログイン
         .container
             block content
