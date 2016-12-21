@@ -1,3 +1,4 @@
 records/*.*
+hls/*
 !.gitkeep
 node_modules/

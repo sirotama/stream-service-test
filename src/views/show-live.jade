@@ -2,18 +2,19 @@ extends ./base
 block head
     meta(charset="UTF-8")
     title #{live.name} - MisskeyTV
-    script(src="//cdn.jsdelivr.net/hls.js/latest/hls.min.js")
-    script.
-        $(function(){
-            var video = document.getElementById("player")
-            var hls = new Hls()
-            hls.loadSource(video.currentSrc)
-            hls.attachMedia(video)
-            hls.on(Hls.Events.MANIFEST_PARSED,function() {
-                video.volume=0.5;
-                video.play()
+    if live.status == "live"
+        script(src="//cdn.jsdelivr.net/hls.js/latest/hls.min.js")
+        script.
+            $(function(){
+                var video = document.getElementById("player")
+                var hls = new Hls()
+                hls.loadSource(video.currentSrc)
+                hls.attachMedia(video)
+                hls.on(Hls.Events.MANIFEST_PARSED,function() {
+                    video.volume=0.5;
+                    video.play()
+                })
             })
-        })
     style.
         video{
             background:black;

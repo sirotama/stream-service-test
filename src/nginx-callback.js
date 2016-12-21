@@ -44,6 +44,9 @@ app.post("/publish",function(req,res){
         live.name = user.newStream.name || live.screenName+' live'
         live.description = user.newStream.description
         live.status = 'live'
+        exec("rm /var/www/html/hls/"+user.screenName,function(){
+            exec("ln -s /var/www/hls/"+streamKey+"/ /var/www/html/hls/"+user.screenName,function(err){});
+        })
         return live.save()
     }).then(function(){
         res.send("ok")

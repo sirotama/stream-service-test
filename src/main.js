@@ -35,7 +35,7 @@ app.use(function (req,res,next){
 app.get("/",function(req,res){
     Promise.all([
         models.lives.find({status:'live'}),
-        models.lives.find({status:'archive'}).sort("-endAt")
+        models.lives.find({status:'archive'}).sort("-endAt").limit(20)
     ]).then(function(_){
         res.render("index",{
             lives:_[0],
