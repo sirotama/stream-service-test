@@ -79,7 +79,7 @@ app.get("/login/xyz_callback",function(req,res){
         console.log(json)
         req.session.user = json.username
         req.session.save()
-        return models.users.findOne({screenName:json.screen_name})
+        return models.users.findOne({screenName:json.username})
     }).then(function(user){
         if(!user) {
             user = new models.users()
