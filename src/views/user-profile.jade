@@ -36,7 +36,7 @@ block content
             | Now live
             a(href="/live/"+user.screenName).btn.btn-primary.btn-sm Watch!
     h2 配信
-    table.table.table-bordered
+    .table-responsive: table.table.table-bordered.table-sm
         tr
             th 状態
             th 開始時間
@@ -47,4 +47,8 @@ block content
                 td= live.status
                 td: time(datetime=live.createdAt.toISOString())
                 td: time(difftime=live.endAt - live.createdAt)
-                td: a(href='/live/'+user.screenName)= live.name
+                td
+                    if live.status == "live"
+                        a(href='/live/'+user.screenName)= live.name
+                    else
+                        a(href="/record/"+live.id)= live.name

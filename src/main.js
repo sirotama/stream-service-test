@@ -89,12 +89,29 @@ app.get("/live/:username",function(req,res){
         }
         return Promise.all([
             user,
-            models.lives.findOne({screenName:user.screenName}).sort("-createdAt")
+            models.lives.findOne({screenName:user.screenName,status:'live'}).sort("-createdAt")
         ])
     }).then(function(_){
         var user = _[0]
         var live = _[1]
-        console.log(arguments)
+        if(!live) return res.redirect("/profile/"+user.screenName)
+        res.render("show-live.jade",{user,live})
+    })
+})
+app.get("/record/:id",function(req,res){
+    models.lives.findById(req.params.id).then(function(live){
+        if(!live) {
+            // not found
+            res.status(404).send("live not found")
+            return
+        }
+        return Promise.all([
+            models.users.findOne({screenName:live.screenName}),
+            live
+        ])
+    }).then(function(_){
+        var user = _[0]
+        var live = _[1]
         res.render("show-live.jade",{user,live})
     })
 })
@@ -158,79 +175,12 @@ app.get("/hls/:name/:path",function(req,res){
     })
 })
 // 録画配信
-app.get("/records/mp4/:id",function(req,res){
+app.get("/record/:id/mp4",function(req,res){
     models.lives.findById(req.params.id).then(function(live){
         if(!live) return res.status(404).send("not-found")
         if(!live.recordPath) return res.status(404).send("not-found")
         res.sendFile(live.recordPath)
     })
 })
-// 放送開始
-app.post("/nginx-callback/publish",function(req,res){
-    var streamKey = req.body.name
-    models.users.findOne({streamKey}).then(function(user){
-        if(!user){
-            return Promise.reject("notfound")
-        }
-        // 開始されたのにもう始まってる放送があったら終わったことに
-        models.lives.find({
-            screenName:user.screenName,
-            status:"live"
-        }).then(function(lives){
-            lives.forEach(function(live){
-                live.status = "archive"
-                live.save(function(err){})
-            })
-        })
-        return Promise.resolve(user)
-    }).then(function(user){
-        var live = new models.lives()
-        live.screenName = user.screenName
-        live.name = user.newStream.name
-        live.description = user.newStream.description
-        live.status = 'live'
-        return live.save()
-    }).then(function(){
-        res.send("ok")
-    },function(){
-        res.status(400).send("ng")
-    })
-})
-// 放送終了
-app.post("/nginx-callback/record",function(req,res){
-    var recordFilePath = req.body.path
-    console.log(recordFilePath)
-    var streamKey = /^.+\/(.+?)\.flv$/.exec(recordFilePath)[1]
-    if(0 !== recordFilePath.indexOf("/var/www/html/records")) return res.status(403).send("invalid")
-    if(~recordFilePath.indexOf("'")) return res.status(403).send("invalid")
-    if(~recordFilePath.indexOf('"')) return res.status(403).send("invalid")
-    if(~recordFilePath.indexOf("..")) return res.status(403).send("invalid")
-    models.users.findOne({streamKey}).then(function(user){
-        if(!user) {
-            return Promise.reject("user-not-found")
-        }
-        return models.lives.findOne({screenName:user.screenName,status:"live"})
-    }).then(function(live){
-        live.endAt= new Date()
-        live.status="archive"
-        return live.save()
-    }).then(function(live){
-        return new Promise(function(resolve,reject){
-            exec("ffmpeg -i "+recordFilePath+" -vcodec copy -acodec copy ../records/"+live.id+".mp4",function(err){
-                if(err) reject(err)
-                fs.unlink(recordFilePath,function(err){
-                    if(err) reject(err)
-                    resolve()
-                })
-            })
-        }).then(function(){
-            live.recordPath="/var/www/html/records/"+live.id+".mp4"
-            return live.save()
-        })
-    }).then(function(){
-        res.send("ok");
-    },function(err){
-        res.status(400).send(err)
-    })
-})
+app.use("/nginx-callback",require("./nginx-callback"))
 app.listen(3000)

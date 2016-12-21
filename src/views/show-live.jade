@@ -24,4 +24,4 @@ block content
         if live.status == "live"
             video.embed-responsive-item(src="/hls/#{user.screenName}/index.m3u8",controls)#player
         else
-            video.embed-responsive-item(src="/records/mp4/"+live.id,controls)
+            video.embed-responsive-item(src="/record/"+live.id+"/mp4",controls)
