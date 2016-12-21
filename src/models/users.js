@@ -7,6 +7,8 @@ module.exports = function(mongoose) {
         screenName:String,
         streamKey:{type:String,default:generateToken},
         newStream:{
+            allowFlag:Boolean,
+            allowDate:Date,
             name:String,
             description:String,
         },
