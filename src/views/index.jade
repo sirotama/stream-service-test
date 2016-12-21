@@ -9,7 +9,7 @@ block content
     div= name
     ul
         each live in lives
-            li: a(href='/live/'+live.screenName) @#{live.screenName}
+            li: a(href='/live/'+live.screenName) #{live.name} - @#{live.screenName}
     h2 過去の配信
     ul
         each live in end_lives

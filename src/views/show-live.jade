@@ -19,10 +19,11 @@ block head
             background:black;
         }
         h1 .tag{
-            font-size:0.5em;
+            font-size:0.4em;
         }
 block content
     h1= live.name
+        |  
         if live.status == "live"
             span.tag.tag-success Live
         else if live.status == "archive"
@@ -37,3 +38,6 @@ block content
                 video.embed-responsive-item(src="/record/"+live.id+"/mp4",controls)
             else
                 span 録画がないみたいです。ごめんなさい。
+    br
+    h2 配信説明文
+    pre= live.description

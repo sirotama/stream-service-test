@@ -128,6 +128,7 @@ app.post("/start",function(req,res){
         }
         return Promise.resolve(user)
     }).then(function(user){
+        user.newStream.allowDate = new Date()
         user.newStream.name = req.body.name
         user.newStream.description = req.body.description
         return user.save()
