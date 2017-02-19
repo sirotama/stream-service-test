@@ -5,6 +5,8 @@ const models = require("./models")
 const fs  = require("fs")
 const request = require("request-promise")
 const config = require("./config")
+const sha256 = require('js-sha256');
+
 var app = express()
 app.set("view engine","jade")
 app.set("views",__dirname+"/views/")
@@ -51,7 +53,8 @@ app.get("/xyz_callback",function(req,res){
             user = new models.users()
             user.screenName = req.session.user
         }
-        user.xyzToken = req.session.userkey
+
+        user.xyzToken = sha256(req.session.userkey + config.api_secret);
         return user.save()
     }).then(function(user){
         res.redirect("/login/xyz_end")
